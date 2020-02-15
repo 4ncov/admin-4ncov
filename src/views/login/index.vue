@@ -119,6 +119,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
+            this.$store.dispatch('user/setName', this.loginForm.telephone)
           }).catch((e) => {
             console.warn('Sign in error', e)
             Message({
