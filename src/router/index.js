@@ -67,6 +67,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/supplied-materials',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'SuppliedMaterials',
+        component: () => import('@/views/supplied-materials/index'),
+        meta: { title: '物资供应', icon: 'table' }
+      }
+    ]
+  },
 
   {
     path: '/example',

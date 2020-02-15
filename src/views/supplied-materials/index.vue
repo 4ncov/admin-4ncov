@@ -61,17 +61,18 @@
       :current-page.sync="page"
       @current-change="fetchData"
       @prev-click="loadPrev"
-      @next-click="loadNext"></el-pagination>
+      @next-click="loadNext"
+    ></el-pagination>
   </div>
 </template>
 
 <script>
-import { list } from '@/api/required-materials'
+import { list } from '@/api/supplied-materials'
 import { parseTime } from '@/utils/'
 import STATUS from '@/utils/status'
 
 export default {
-  name: 'RequiredMaterials',
+  name: 'SuppliedMaterials',
   data() {
     return {
       list: null,
