@@ -56,6 +56,19 @@ export const constantRoutes = [
   },
 
   {
+    path: '/required-materials',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'RequiredMaterials',
+        component: () => import('@/views/required-materials/index'),
+        meta: { title: '物资寻求', icon: 'table' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
