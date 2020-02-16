@@ -16,3 +16,18 @@ export default {
     description: '已完成'
   }
 }
+
+export const USER_STATUS = {
+  PENDING: {
+    type: 'info',
+    description: '待审核'
+  },
+  ACTIVE: {
+    type: 'success',
+    description: '使用中'
+  },
+  SUSPENDED: {
+    type: 'warning',
+    description: '已注销'
+  }
+}

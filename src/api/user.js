@@ -8,9 +8,9 @@ export function login(data) {
   })
 }
 
-export function list(status) {
+export function list(page, size) {
   return request({
-    url: `/users?status=${status}`,
+    url: `/users/all?page=${page}&size=${size}`,
     method: 'get'
   })
 }
