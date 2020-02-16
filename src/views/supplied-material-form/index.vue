@@ -57,6 +57,38 @@
             <el-tag :type="status[form.status].type">
               {{ status[form.status].description }}
             </el-tag>
+            <el-button
+              style="margin-left: 10px;"
+              type="primary"
+              size="small"
+              v-if="form.status === 'PENDING'"
+              @click="onClickApprove"
+            >批准并发布</el-button>
+            <el-dialog title="确认批准并发布" :visible.sync="dialog.isApproveVisible" width="30%">
+              <span>确定批准该供应并发布吗？一旦发布，该供应将公开可见。</span>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.isApproveVisible = false">取消</el-button>
+                <el-button type="success" @click="onApprove">确认</el-button>
+              </span>
+            </el-dialog>
+            <el-button
+              type="warning"
+              size="small"
+              v-if="form.status === 'PENDING' && !form.reviewMessage"
+              @click="onClickReject"
+            >驳回审核</el-button>
+            <el-dialog title="驳回审核" :visible.sync="dialog.isRejectVisible" width="30%">
+              <span>确定驳回该供应的审核吗？一旦驳回，发布者将需要修改其内容以满足审核意见，并需重新审核方可发布。</span>
+              <el-input v-model="reviewMessage" placeholder="请填写审核意见"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.isRejectVisible = false">取消</el-button>
+                <el-button type="danger" @click="onReject">确认</el-button>
+              </span>
+            </el-dialog>
+          </el-form-item>
+          <el-form-item label="审核意见">
+            <el-input disabled v-model="form.reviewMessage" />
+          </el-form-item>
           </el-form-item>
         </el-col>
       </div>
@@ -146,11 +178,13 @@
 
 <script>
 import { list } from '@/api/material-category'
+import { approve, reject } from '@/api/supplied-materials'
 import STATUS from '@/utils/status'
 
 export default {
   data() {
     return {
+      id: this.$route.params['id'],
       form: Object.assign({
         materials: [{
           id: null,
@@ -171,11 +205,17 @@ export default {
         contactorPhone: '',
         organisationName: '',
         source: '',
-        status: ''
+        status: '',
+        reviewMessage: ''
       }, this.$store.getters.suppliedMaterial),
       categories: [],
       status: STATUS,
-      isEdit: true
+      isEdit: true,
+      dialog: {
+        isApproveVisible: false,
+        isRejectVisible: false
+      },
+      reviewMessage: ''
     }
   },
   async created() {
@@ -214,6 +254,30 @@ export default {
     },
     onUploadSuccess(res, material) {
       material.imageUrl = res.data.url
+    },
+    onClickApprove() {
+      this.dialog.isApproveVisible = true
+    },
+    onClickReject() {
+      this.reviewMessage = ''
+      this.dialog.isRejectVisible = true
+    },
+    async onApprove() {
+      const response = await approve(this.id)
+      this.dialog.isApproveVisible = false
+      this.$message.info(response.message)
+      this.form.status = 'PUBLISHED'
+      this.form.reviewMessage = ''
+    },
+    async onReject() {
+      if (!this.reviewMessage) {
+        this.$message.warning('请填写审核意见')
+        return
+      }
+      const response = await reject(this.id, this.reviewMessage)
+      this.dialog.isRejectVisible = false
+      this.$message.info(response.message)
+      this.form.reviewMessage = this.reviewMessage
     }
   }
 }
