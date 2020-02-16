@@ -110,7 +110,8 @@ export default {
     statusFilter(status) {
       return STATUS[status]
     },
-    onClickNew() {
+    async onClickNew() {
+      await this.$store.dispatch('material/restore')
       this.$router.push('/required-materials/new')
     },
     async onClickEdit(m) {

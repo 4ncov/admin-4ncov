@@ -47,8 +47,23 @@
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
+          <el-form-item label="信息来源">
+            <el-input v-model="form.source" />
+          </el-form-item>
+          <el-form-item label="发布为">
+            <el-select v-model="form.publishFor" style="width: 100%;" placeholder="请选择为何发布">
+              <el-option label="医院" value="医院"></el-option>
+              <el-option label="组织" value="组织"></el-option>
+              <el-option label="个人" value="个人"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="备注">
-            <el-input type="textarea" v-model="form.comment" />
+            <el-input v-model="form.comment" />
+          </el-form-item>
+          <el-form-item label="状态" v-if="status[form.status]">
+            <el-tag :type="status[form.status].type">
+              {{ status[form.status].description }}
+            </el-tag>
           </el-form-item>
         </el-col>
       </div>
@@ -115,7 +130,7 @@
         </el-col>
         <el-col :span="13">&nbsp;</el-col>
       </div>
-      <div> <!-- TODO hide button in edit mode -->
+      <div v-if="!isEdit">
         <el-col :span="24">
           <el-form-item>
             <el-button type="primary" @click="onAddMaterial">
@@ -138,6 +153,7 @@
 
 <script>
 import { list } from '@/api/material-category'
+import STATUS from '@/utils/status'
 
 export default {
   data() {
@@ -159,12 +175,22 @@ export default {
         comment: '',
         contactorName: '',
         contactorPhone: '',
-        organisationName: ''
+        organisationName: '',
+        source: '',
+        status: '',
+        publishFor: ''
       }, this.$store.getters.requiredMaterial),
-      categories: []
+      categories: [],
+      status: STATUS,
+      isEdit: true
     }
   },
   async created() {
+    this.isEdit = !!this.$route.params['id']
+    if (this.isEdit && !this.$store.getters.requiredMaterial.id) {
+      alert('请重新进入编辑.')
+      this.$router.back()
+    }
     const response = await list()
     this.categories = response.data
   },
@@ -201,7 +227,7 @@ export default {
 </script>
 
 <style scoped>
-  .line{
+  .line {
     text-align: center;
   }
 

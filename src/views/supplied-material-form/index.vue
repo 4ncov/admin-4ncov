@@ -47,8 +47,16 @@
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
+          <el-form-item label="信息来源">
+            <el-input v-model="form.source" />
+          </el-form-item>
           <el-form-item label="备注">
             <el-input type="textarea" v-model="form.comment" />
+          </el-form-item>
+          <el-form-item label="状态" v-if="status[form.status]">
+            <el-tag :type="status[form.status].type">
+              {{ status[form.status].description }}
+            </el-tag>
           </el-form-item>
         </el-col>
       </div>
@@ -115,7 +123,7 @@
         </el-col>
         <el-col :span="13">&nbsp;</el-col>
       </div>
-      <div> <!-- TODO hide button in edit mode -->
+      <div v-if="!isEdit">
         <el-col :span="24">
           <el-form-item>
             <el-button type="primary" @click="onAddMaterial">
@@ -138,12 +146,14 @@
 
 <script>
 import { list } from '@/api/material-category'
+import STATUS from '@/utils/status'
 
 export default {
   data() {
     return {
       form: Object.assign({
         materials: [{
+          id: null,
           name: '',
           quantity: null,
           standard: '',
@@ -159,12 +169,21 @@ export default {
         comment: '',
         contactorName: '',
         contactorPhone: '',
-        organisationName: ''
+        organisationName: '',
+        source: '',
+        status: ''
       }, this.$store.getters.suppliedMaterial),
-      categories: []
+      categories: [],
+      status: STATUS,
+      isEdit: true
     }
   },
   async created() {
+    this.isEdit = !!this.$route.params['id']
+    if (this.isEdit && !this.$store.getters.suppliedMaterial.id) {
+      alert('请重新进入编辑.')
+      this.$router.back()
+    }
     const response = await list()
     this.categories = response.data
   },

@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <div>
+      <el-button type="primary" @click="onClickNew"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -108,13 +111,14 @@ export default {
     statusFilter(status) {
       return STATUS[status]
     },
-    onClickNew() {
-      this.$router.push('/required-materials/new')
+    async onClickNew() {
+      await this.$store.dispatch('material/restore')
+      this.$router.push('/supplied-materials/new')
     },
     async onClickEdit(m) {
-      const requiredMaterial = Object.assign(m, { materials: [m.material] })
-      await this.$store.dispatch('material/loadRequiredMaterial', requiredMaterial)
-      this.$router.push(`/required-materials/${m.id}`)
+      const suppliedMaterial = Object.assign(m, { materials: [m.material] })
+      await this.$store.dispatch('material/loadSuppliedMaterial', suppliedMaterial)
+      this.$router.push(`/supplied-materials/${m.id}`)
     }
   }
 }
