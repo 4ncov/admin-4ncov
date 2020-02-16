@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <div>
+      <el-button type="primary" @click="onClickNew"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -9,8 +12,10 @@
       highlight-current-row
     >
       <el-table-column label="操作" align="center">
-        <i class="el-icon-edit"></i>
-        <i class="el-icon-delete"></i>
+        <template slot-scope="scope">
+          <i class="el-icon-edit" @click="() => onClickEdit(scope.row)"></i>
+          <i class="el-icon-delete"></i>
+        </template>
       </el-table-column>
       <el-table-column label="名称" width="110" align="center">
         <template slot-scope="scope">
@@ -104,6 +109,14 @@ export default {
     },
     statusFilter(status) {
       return STATUS[status]
+    },
+    onClickNew() {
+      this.$router.push('/required-materials/new')
+    },
+    async onClickEdit(m) {
+      const requiredMaterial = Object.assign(m, { materials: [m.material] })
+      await this.$store.dispatch('material/loadRequiredMaterial', requiredMaterial)
+      this.$router.push(`/required-materials/${m.id}`)
     }
   }
 }

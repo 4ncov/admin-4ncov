@@ -64,6 +64,20 @@ export const constantRoutes = [
         name: 'RequiredMaterials',
         component: () => import('@/views/required-materials/index'),
         meta: { title: '物资寻求', icon: 'table' }
+      },
+      {
+        path: 'new',
+        name: 'RequiredMaterialFormNew',
+        component: () => import('@/views/required-material-form/index'),
+        meta: { title: '新增物资寻求' },
+        hidden: true
+      },
+      {
+        path: '/required-materials/:id',
+        name: 'RequiredMaterialFormEdit',
+        component: () => import('@/views/required-material-form/index'),
+        meta: { title: '修改物资寻求' },
+        hidden: true
       }
     ]
   },
@@ -75,7 +89,21 @@ export const constantRoutes = [
         path: 'index',
         name: 'SuppliedMaterials',
         component: () => import('@/views/supplied-materials/index'),
-        meta: { title: '物资供应', icon: 'table' }
+        meta: { title: '物资供应', icon: 'example' }
+      },
+      {
+        path: 'new',
+        name: 'SuppliedMaterialFormNew',
+        component: () => import('@/views/supplied-material-form/index'),
+        meta: { title: '新增物资供应' },
+        hidden: true
+      },
+      {
+        path: '/supplied-materials/:id',
+        name: 'SuppliedMaterialFormEdit',
+        component: () => import('@/views/supplied-material-form/index'),
+        meta: { title: '修改物资供应' },
+        hidden: true
       }
     ]
   },
