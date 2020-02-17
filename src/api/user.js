@@ -14,3 +14,10 @@ export function list(page, size) {
     method: 'get'
   })
 }
+
+export function getDetail(id) {
+  return request({
+    url: `/users/${id}`,
+    method: 'get'
+  })
+}

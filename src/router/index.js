@@ -116,6 +116,13 @@ export const constantRoutes = [
         name: 'Users',
         component: () => import('@/views/users/index'),
         meta: { title: '用户', icon: 'user' }
+      },
+      {
+        path: '/users/:id',
+        name: 'UserFormEdit',
+        component: () => import('@/views/user-form/index'),
+        meta: { title: '查看用户信息' },
+        hidden: true
       }
     ]
   },

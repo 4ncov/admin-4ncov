@@ -88,7 +88,7 @@ export default {
       await this.fetchData()
     },
     onClickView(user) {
-      console.log(user)
+      this.$router.push(`/users/${user.id}`)
     }
   }
 }

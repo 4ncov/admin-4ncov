@@ -9,3 +9,9 @@ export default {
     description: '管理员'
   }
 }
+
+export const isHospital = role => role === 'HOSPITAL'
+
+export const isSupplier = role => role === 'SUPPLIER'
+
+export const isSysadmin = role => role === 'SYSADMIN'

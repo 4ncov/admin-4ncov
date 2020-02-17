@@ -17,41 +17,41 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="联系人">
-            <el-input v-model="form.contactorName" />
+            <el-input v-model="form.contactorName"/>
           </el-form-item>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
           <el-form-item label="联系电话">
-            <el-input v-model="form.contactorPhone" />
+            <el-input v-model="form.contactorPhone"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="组织机构名称">
-            <el-input v-model="form.organisationName" />
+            <el-input v-model="form.organisationName"/>
           </el-form-item>
         </el-col>
         <el-col :span="11">
           <el-form-item label="省">
-            <el-input v-model="form.address.province" />
+            <el-input v-model="form.address.province"/>
           </el-form-item>
           <el-form-item label="市">
-            <el-input v-model="form.address.city" />
+            <el-input v-model="form.address.city"/>
           </el-form-item>
           <el-form-item label="区">
-            <el-input v-model="form.address.district" />
+            <el-input v-model="form.address.district"/>
           </el-form-item>
           <el-form-item label="街道地址">
-            <el-input v-model="form.address.streetAddress" />
+            <el-input v-model="form.address.streetAddress"/>
           </el-form-item>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
           <el-form-item label="信息来源">
-            <el-input v-model="form.source" />
+            <el-input v-model="form.source"/>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input type="textarea" v-model="form.comment" />
+            <el-input type="textarea" v-model="form.comment"/>
           </el-form-item>
           <el-form-item label="状态" v-if="status[form.status]">
             <el-tag :type="status[form.status].type">
@@ -63,7 +63,8 @@
               size="small"
               v-if="form.status === 'PENDING'"
               @click="onClickApprove"
-            >批准并发布</el-button>
+            >批准并发布
+            </el-button>
             <el-dialog title="确认批准并发布" :visible.sync="dialog.isApproveVisible" width="30%">
               <span>确定批准该供应并发布吗？一旦发布，该供应将公开可见。</span>
               <span slot="footer" class="dialog-footer">
@@ -76,7 +77,8 @@
               size="small"
               v-if="form.status === 'PENDING' && !form.reviewMessage"
               @click="onClickReject"
-            >驳回审核</el-button>
+            >驳回审核
+            </el-button>
             <el-dialog title="驳回审核" :visible.sync="dialog.isRejectVisible" width="30%">
               <span>确定驳回该供应的审核吗？一旦驳回，发布者将需要修改其内容以满足审核意见，并需重新审核方可发布。</span>
               <el-input v-model="reviewMessage" placeholder="请填写审核意见"></el-input>
@@ -87,8 +89,7 @@
             </el-dialog>
           </el-form-item>
           <el-form-item label="审核意见">
-            <el-input disabled v-model="form.reviewMessage" />
-          </el-form-item>
+            <el-input disabled v-model="form.reviewMessage"/>
           </el-form-item>
         </el-col>
       </div>
@@ -109,7 +110,7 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="物资名称">
-            <el-input v-model="material.name" placeholder="请输入物资名称(必填)" />
+            <el-input v-model="material.name" placeholder="请输入物资名称(必填)"/>
           </el-form-item>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
@@ -127,13 +128,13 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="物资数量">
-            <el-input v-model="material.quantity" placeholder="请输入物资数量(必填)" />
+            <el-input v-model="material.quantity" placeholder="请输入物资数量(必填)"/>
           </el-form-item>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
           <el-form-item label="执行标准">
-            <el-input v-model="material.standard" placeholder="请输入执行标准(必填)" />
+            <el-input v-model="material.standard" placeholder="请输入执行标准(必填)"/>
           </el-form-item>
         </el-col>
         <el-col :span="11">
@@ -284,7 +285,7 @@ export default {
 </script>
 
 <style scoped>
-  .line{
+  .line {
     text-align: center;
   }
 
