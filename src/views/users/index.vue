@@ -69,10 +69,10 @@ export default {
     }
   },
   async created() {
-    await this.fetchData()
+    await this.fetchMaterials()
   },
   methods: {
-    async fetchData() {
+    async fetchMaterials() {
       this.listLoading = true
       const response = await list(this.page, this.size)
       this.users = response.data.map(u => Object.assign(u, { formattedGmtCreated: parseTime(u.gmtCreated) }))
@@ -81,11 +81,11 @@ export default {
     },
     async loadPrev() {
       --this.page
-      await this.fetchData()
+      await this.fetchMaterials()
     },
     async loadNext() {
       ++this.page
-      await this.fetchData()
+      await this.fetchMaterials()
     },
     onClickView(user) {
       this.$router.push(`/users/${user.id}`)

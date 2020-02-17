@@ -1,9 +1,42 @@
 <template>
   <div class="app-container">
-    <div>
-      <el-button type="primary" @click="onClickNew"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
+    <div class="list-section">
+      <el-row>
+        <el-col :span="4">
+          <el-select placeholder="请选择物资类别" v-model="filter.category">
+            <el-option
+              v-for="category in categories"
+              :key="category.id"
+              :label="category.name"
+              :value="category.name"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="4">
+          <el-select placeholder="请选择状态" v-model="filter.status">
+            <el-option
+              v-for="sName in Object.keys(status)"
+              :key="sName"
+              :label="status[sName].description"
+              :value="sName"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="4">
+          <el-input placeholder="请输入发布手机号" v-model="filter.contactPhone" />
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="9">
+          <el-button type="success" icon="el-icon-search" @click="onClickSearch">搜索</el-button>
+          <el-button type="info" icon="el-icon-delete" @click="onClickClearSearch">清空搜索</el-button>
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="onClickNew">新增</el-button>
+        </el-col>
+      </el-row>
     </div>
     <el-table
+      class="list-section"
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
@@ -64,7 +97,7 @@
       layout="prev, pager, next"
       :total="total"
       :current-page.sync="page"
-      @current-change="fetchData"
+      @current-change="loadCurrent"
       @prev-click="loadPrev"
       @next-click="loadNext"
     ></el-pagination>
@@ -72,7 +105,8 @@
 </template>
 
 <script>
-import { list } from '@/api/supplied-materials'
+import { list as listCategories } from '@/api/material-category'
+import { list as listMaterials } from '@/api/supplied-materials'
 import { parseTime } from '@/utils/'
 import STATUS from '@/utils/status'
 
@@ -84,29 +118,45 @@ export default {
       listLoading: true,
       page: 1,
       size: 10,
-      total: 0
+      total: 0,
+      filter: {},
+      status: STATUS,
+      categories: []
     }
   },
-  created() {
-    this.fetchData()
+  async created() {
+    this.listLoading = true
+    await this.fetchCategories()
+    await this.fetchMaterials()
+    this.listLoading = false
   },
   methods: {
-    fetchData() {
+    async fetchMaterials() {
+      const response = await listMaterials(this.page, this.size, this.filter)
+      this.list = response.data
+        .map(material => Object.assign(material, { formattedGmtCreated: parseTime(material.gmtCreated) }))
+      this.total = response.total
+    },
+    async fetchCategories() {
+      const response = await listCategories()
+      this.categories = response.data
+    },
+    async loadPrev() {
       this.listLoading = true
-      list(this.page, this.size).then(response => {
-        this.list = response.data
-          .map(material => Object.assign(material, { formattedGmtCreated: parseTime(material.gmtCreated) }))
-        this.total = response.total
-        this.listLoading = false
-      })
-    },
-    loadPrev() {
       --this.page
-      this.fetchData()
+      await this.fetchMaterials()
+      this.listLoading = false
     },
-    loadNext() {
+    async loadCurrent() {
+      this.listLoading = true
+      await this.fetchMaterials()
+      this.listLoading = false
+    },
+    async loadNext() {
+      this.listLoading = true
       ++this.page
-      this.fetchData()
+      await this.fetchMaterials()
+      this.listLoading = false
     },
     statusFilter(status) {
       return STATUS[status]
@@ -119,7 +169,36 @@ export default {
       const suppliedMaterial = Object.assign(m, { materials: [m.material] })
       await this.$store.dispatch('material/loadSuppliedMaterial', suppliedMaterial)
       this.$router.push(`/supplied-materials/${m.id}`)
+    },
+    async onClickSearch() {
+      if (this.isFilterEmpty(this.filter)) {
+        console.log('No filter provided, not refreshing')
+        return
+      }
+      this.listLoading = true
+      this.page = 1
+      await this.fetchMaterials()
+      this.listLoading = false
+    },
+    async onClickClearSearch() {
+      this.listLoading = true
+      this.page = 1
+      this.filter = {}
+      await this.fetchMaterials()
+      this.listLoading = false
+    },
+    isFilterEmpty(filter) {
+      return !filter.category && !filter.status && !filter.contactPhone
     }
   }
 }
 </script>
+<style>
+  el-select {
+    width: 100%;
+  }
+
+  .list-section {
+    margin-bottom: 2rem;
+  }
+</style>

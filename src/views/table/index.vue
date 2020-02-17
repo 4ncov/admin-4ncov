@@ -64,10 +64,10 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchMaterials()
   },
   methods: {
-    fetchData() {
+    fetchMaterials() {
       this.listLoading = true
       getList().then(response => {
         this.list = response.data.items
