@@ -22,7 +22,7 @@ export const USER_STATUS = {
     type: 'info',
     description: '待认证'
   },
-  ACTIVE: {
+  VERIFIED: {
     type: 'success',
     description: '已认证'
   },
