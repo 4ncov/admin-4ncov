@@ -7,7 +7,7 @@ const getDefaultState = () => {
         quantity: null,
         standard: '',
         category: '',
-        imageUrl: ''
+        imageUrls: []
       }],
       address: {
         province: '',
@@ -30,7 +30,7 @@ const getDefaultState = () => {
         quantity: null,
         standard: '',
         category: '',
-        imageUrl: ''
+        imageUrls: []
       }],
       address: {
         province: '',

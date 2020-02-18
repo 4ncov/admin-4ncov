@@ -4,8 +4,8 @@
       <div>
         <el-col :span="24">
           <el-form-item>
-            <el-button type="warning" @click="onGoBack"><i class="el-icon-back"></i> 返回</el-button>
-            <el-button type="success"><i class="el-icon-check"></i> 保存</el-button>
+            <el-button type="warning" icon="el-icon-back" @click="onGoBack">返回</el-button>
+            <el-button type="success" icon="el-icon-check" @click="onSave">保存</el-button>
           </el-form-item>
         </el-col>
       </div>
@@ -155,8 +155,8 @@
               <div class="el-upload__text">拖拽或<em>点击</em>上传</div>
             </el-upload>
           </el-form-item>
-          <el-form-item v-if="material.imageUrl">
-            <el-image lazy :src="material.imageUrl"></el-image>
+          <el-form-item v-if="material.imageUrls && material.imageUrls.length > 0">
+            <el-image lazy v-for="url in material.imageUrls" :key="url" :src="url"></el-image>
           </el-form-item>
         </el-col>
         <el-col :span="13">&nbsp;</el-col>
@@ -173,8 +173,8 @@
       <div>
         <el-col :span="24" class="buttons-bottom">
           <el-form-item>
-            <el-button type="warning" @click="onGoBack"><i class="el-icon-back"></i> 返回</el-button>
-            <el-button type="success"><i class="el-icon-check"></i> 保存</el-button>
+            <el-button type="warning" icon="el-icon-back" @click="onGoBack">返回</el-button>
+            <el-button type="success" icon="el-icon-check" @click="onSave">保存</el-button>
           </el-form-item>
         </el-col>
       </div>
@@ -184,7 +184,7 @@
 
 <script>
 import { list } from '@/api/material-category'
-import { approve, reject } from '@/api/required-materials'
+import { approve, reject, create } from '@/api/required-materials'
 import STATUS from '@/utils/status'
 
 export default {
@@ -197,7 +197,7 @@ export default {
           quantity: null,
           standard: '',
           category: '',
-          imageUrl: ''
+          imageUrls: []
         }],
         address: {
           province: '',
@@ -234,8 +234,14 @@ export default {
     this.categories = response.data
   },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
+    async onSave() {
+      if (!this.isEdit) {
+        const response = await create(this.form)
+        this.$message({ message: response.message, type: 'info' })
+      } else {
+        console.log('update') // TODO update
+      }
+      this.$router.back()
     },
     onCancel() {
       this.$message({
@@ -249,7 +255,7 @@ export default {
         quantity: null,
         standard: '',
         category: '',
-        imageUrl: ''
+        imageUrls: []
       })
     },
     onDeleteMaterial(i) {
@@ -259,7 +265,7 @@ export default {
       this.$router.back()
     },
     onUploadSuccess(res, material) {
-      material.imageUrl = res.data.url
+      material.imageUrls.push(res.data.url)
     },
     onClickApprove() {
       this.dialog.isApproveVisible = true

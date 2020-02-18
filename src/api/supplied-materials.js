@@ -8,6 +8,14 @@ export function list(page, size, filter = {}) {
   })
 }
 
+export function create(material) {
+  return request({
+    url: `/supplied-materials`,
+    method: 'post',
+    data: material
+  })
+}
+
 export function approve(id) {
   return request({
     url: `/supplied-materials/${id}:approve`,
