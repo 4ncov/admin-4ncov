@@ -21,3 +21,10 @@ export function getDetail(id) {
     method: 'get'
   })
 }
+
+export function verify(id) {
+  return request({
+    url: `/users/${id}:verify`,
+    method: 'patch'
+  })
+}

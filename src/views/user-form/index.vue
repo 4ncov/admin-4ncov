@@ -57,12 +57,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-form-item label="状态">
             <el-tag :type="status[form.status].type">{{ status[form.status].description }}</el-tag>
+            <el-button
+              v-if="form.status === 'PENDING'"
+              type="success"
+              size="small"
+              @click="onClickVerify"
+            >认证</el-button>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="创建时间">
             <div>{{ form.formattedGmtCreated }}</div>
           </el-form-item>
@@ -137,7 +143,7 @@
 </template>
 
 <script>
-import { getDetail } from '@/api/user'
+import { getDetail, verify } from '@/api/user'
 import { USER_STATUS } from '@/utils/status'
 import USER_ROLE, { isHospital, isSupplier } from '@/utils/user-role'
 import { getUserId } from '@/utils/auth'
@@ -177,6 +183,11 @@ export default {
     },
     onClickViewSuppliedMaterials() {
       this.$router.push(`/supplied-materials/index?userId=${getUserId()}`)
+    },
+    async onClickVerify() {
+      const response = await verify(this.form.id)
+      this.form.status = 'VERIFIED'
+      this.$message.info(response.message)
     }
   }
 }
