@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
+    <el-form ref="form" :model="form" label-width="120px" v-loading.fullscreen.lock="isLoading">
       <div>
         <el-col :span="24">
           <el-form-item>
@@ -33,13 +33,30 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="省">
-            <el-input v-model="form.address.province"/>
+            <el-select class="select" v-model="form.address.province" placeholder="请选择省份" @change="onChangeProvince">
+              <el-option v-for="province in geo.provinces" :key="province" :value="province" :label="province" />
+            </el-select>
           </el-form-item>
           <el-form-item label="市">
-            <el-input v-model="form.address.city"/>
+            <el-select
+              class="select"
+              v-model="form.address.city"
+              placeholder="请选择城市"
+              :disabled="geo.cities.length === 0"
+              @change="onChangeCity"
+            >
+              <el-option v-for="city in geo.cities" :key="city" :value="city" :label="city" />
+            </el-select>
           </el-form-item>
           <el-form-item label="区">
-            <el-input v-model="form.address.district"/>
+            <el-select
+              class="select"
+              v-model="form.address.district"
+              placeholder="请选择区县"
+              :disabled="geo.districts.length === 0"
+            >
+              <el-option v-for="district in geo.districts" :key="district" :value="district" :label="district" />
+            </el-select>
           </el-form-item>
           <el-form-item label="街道地址">
             <el-input v-model="form.address.streetAddress"/>
@@ -179,12 +196,14 @@
 
 <script>
 import { list } from '@/api/material-category'
+import { listProvinces, listCities, listDistricts } from '@/api/master-data'
 import { approve, reject, create } from '@/api/supplied-materials'
 import STATUS from '@/utils/status'
 
 export default {
   data() {
     return {
+      isLoading: true,
       id: this.$route.params['id'],
       form: Object.assign({
         materials: [{
@@ -196,6 +215,7 @@ export default {
           imageUrls: []
         }],
         address: {
+          country: '中国',
           province: '',
           city: '',
           district: '',
@@ -216,7 +236,12 @@ export default {
         isApproveVisible: false,
         isRejectVisible: false
       },
-      reviewMessage: ''
+      reviewMessage: '',
+      geo: {
+        provinces: [],
+        cities: [],
+        districts: []
+      }
     }
   },
   async created() {
@@ -227,8 +252,22 @@ export default {
     }
     const response = await list()
     this.categories = response.data
+    await this.fetchProvinces()
+    this.isLoading = false
   },
   methods: {
+    async fetchProvinces() {
+      const response = await listProvinces()
+      this.geo.provinces = response.data
+    },
+    async fetchCities() {
+      const response = await listCities(this.form.address.province)
+      this.geo.cities = response.data
+    },
+    async fetchDistricts() {
+      const response = await listDistricts(this.form.address.province, this.form.address.city)
+      this.geo.districts = response.data
+    },
     async onSave() {
       if (!this.isEdit) {
         const response = await create(this.form)
@@ -285,6 +324,19 @@ export default {
       this.dialog.isRejectVisible = false
       this.$message.info(response.message)
       this.form.reviewMessage = this.reviewMessage
+    },
+    async onChangeProvince() {
+      this.isLoading = true
+      await this.fetchCities()
+      this.form.address.city = ''
+      this.form.address.district = ''
+      this.isLoading = false
+    },
+    async onChangeCity() {
+      this.isLoading = true
+      await this.fetchDistricts()
+      this.form.address.district = ''
+      this.isLoading = false
     }
   }
 }
