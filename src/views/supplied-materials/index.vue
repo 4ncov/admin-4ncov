@@ -119,7 +119,9 @@ export default {
       page: 1,
       size: 10,
       total: 0,
-      filter: {},
+      filter: {
+        userId: this.$route.query.userId
+      },
       status: STATUS,
       categories: []
     }

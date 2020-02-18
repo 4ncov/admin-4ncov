@@ -4,8 +4,24 @@
       <div>
         <el-col :span="24">
           <el-form-item>
-            <el-button type="warning" @click="onGoBack"><i class="el-icon-back"></i> 返回</el-button>
+            <el-button type="warning" icon="el-icon-back" @click="onGoBack">返回</el-button>
             <!--<el-button type="success"><i class="el-icon-check"></i> 保存</el-button>-->
+            <el-button
+              v-if="['SYSADMIN', 'HOSPITAL'].includes(form.role)"
+              type="primary"
+              icon="el-icon-search"
+              @click="onClickViewRequiredMaterials"
+            >
+              查看发布的寻求
+            </el-button>
+            <el-button
+              v-if="['SYSADMIN', 'SUPPLIER'].includes(form.role)"
+              type="primary"
+              icon="el-icon-search"
+              @click="onClickViewSuppliedMaterials"
+            >
+              查看发布的供应
+            </el-button>
           </el-form-item>
         </el-col>
       </div>
@@ -88,15 +104,31 @@
         <el-col :span="2">&nbsp;</el-col>
         <el-col :span="11">
           <el-form-item label="联系电话">
-            <el-input disabled v-model="organisation.contactorPhone" />
+            <el-input disabled v-model="organisation.contactorTelephone" />
           </el-form-item>
         </el-col>
       </div>
       <div>
         <el-col :span="24" class="buttons-bottom">
           <el-form-item>
-            <el-button type="warning" @click="onGoBack"><i class="el-icon-back"></i> 返回</el-button>
+            <el-button type="warning" icon="el-icon-back" @click="onGoBack">返回</el-button>
             <!--<el-button type="success"><i class="el-icon-check"></i> 保存</el-button>-->
+            <el-button
+              v-if="['SYSADMIN', 'HOSPITAL'].includes(form.role)"
+              type="primary"
+              icon="el-icon-search"
+              @click="onClickViewRequiredMaterials"
+            >
+              查看发布的寻求
+            </el-button>
+            <el-button
+              v-if="['SYSADMIN', 'SUPPLIER'].includes(form.role)"
+              type="primary"
+              icon="el-icon-search"
+              @click="onClickViewSuppliedMaterials"
+            >
+              查看发布的供应
+            </el-button>
           </el-form-item>
         </el-col>
       </div>
@@ -108,6 +140,7 @@
 import { getDetail } from '@/api/user'
 import { USER_STATUS } from '@/utils/status'
 import USER_ROLE, { isHospital, isSupplier } from '@/utils/user-role'
+import { getUserId } from '@/utils/auth'
 import { parseTime } from '@/utils/'
 
 export default {
@@ -136,14 +169,14 @@ export default {
     onSubmit() {
       this.$message('submit!')
     },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
-    },
     onGoBack() {
       this.$router.back()
+    },
+    onClickViewRequiredMaterials() {
+      this.$router.push(`/required-materials/index?userId=${getUserId()}`)
+    },
+    onClickViewSuppliedMaterials() {
+      this.$router.push(`/supplied-materials/index?userId=${getUserId()}`)
     }
   }
 }

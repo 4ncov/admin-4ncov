@@ -121,7 +121,8 @@ export default {
       filter: {
         category: '',
         status: '',
-        contactPhone: ''
+        contactPhone: '',
+        userId: this.$route.query.userId
       },
       status: STATUS,
       categories: []
