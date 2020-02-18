@@ -20,11 +20,11 @@ export default {
 export const USER_STATUS = {
   PENDING: {
     type: 'info',
-    description: '待审核'
+    description: '待认证'
   },
   ACTIVE: {
     type: 'success',
-    description: '使用中'
+    description: '已认证'
   },
   SUSPENDED: {
     type: 'warning',

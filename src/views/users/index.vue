@@ -44,7 +44,7 @@
       layout="prev, pager, next"
       :total="total"
       :current-page.sync="page"
-      @current-change="fetchData"
+      @current-change="fetchUsers"
       @prev-click="loadPrev"
       @next-click="loadNext"></el-pagination>
   </div>
@@ -69,10 +69,10 @@ export default {
     }
   },
   async created() {
-    await this.fetchMaterials()
+    await this.fetchUsers()
   },
   methods: {
-    async fetchMaterials() {
+    async fetchUsers() {
       this.listLoading = true
       const response = await list(this.page, this.size)
       this.users = response.data.map(u => Object.assign(u, { formattedGmtCreated: parseTime(u.gmtCreated) }))
@@ -81,11 +81,11 @@ export default {
     },
     async loadPrev() {
       --this.page
-      await this.fetchMaterials()
+      await this.fetchUsers()
     },
     async loadNext() {
       ++this.page
-      await this.fetchMaterials()
+      await this.fetchUsers()
     },
     onClickView(user) {
       this.$router.push(`/users/${user.id}`)
