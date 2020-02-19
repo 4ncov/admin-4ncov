@@ -179,10 +179,10 @@ export default {
       this.$router.back()
     },
     onClickViewRequiredMaterials() {
-      this.$router.push(`/required-materials/index?userId=${getUserId()}`)
+      this.$router.push(`/required-materials/index?userId=${this.id}`)
     },
     onClickViewSuppliedMaterials() {
-      this.$router.push(`/supplied-materials/index?userId=${getUserId()}`)
+      this.$router.push(`/supplied-materials/index?userId=${this.id}`)
     },
     async onClickVerify() {
       const response = await verify(this.form.id)
