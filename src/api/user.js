@@ -1,3 +1,4 @@
+import { obj2Param } from '@/utils/'
 import request from '@/utils/request'
 
 export function login(data) {
@@ -8,9 +9,9 @@ export function login(data) {
   })
 }
 
-export function list(page, size) {
+export function list(page, size, filter = {}) {
   return request({
-    url: `/users/all?page=${page}&size=${size}`,
+    url: `/users/all?page=${page}&size=${size}&${obj2Param(filter)}`,
     method: 'get'
   })
 }

@@ -1,6 +1,41 @@
 <template>
   <div class="app-container">
+    <div class="list-section">
+      <el-row>
+        <el-col :span="4">
+          <el-input placeholder="请输入手机号" v-model="filter.telephone" />
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="4">
+          <el-select class="select" placeholder="请选择用户类型" v-model="filter.role">
+            <el-option
+              v-for="role in Object.keys(userRoles)"
+              :key="role"
+              :label="userRoles[role].description"
+              :value="role"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="4">
+          <el-select class="select" placeholder="请选择状态" v-model="filter.status">
+            <el-option
+              v-for="sName in Object.keys(userStatus)"
+              :key="sName"
+              :label="userStatus[sName].description"
+              :value="sName"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="9">
+          <el-button type="success" icon="el-icon-search" @click="onClickSearch">搜索</el-button>
+          <el-button type="info" icon="el-icon-delete" @click="onClickClearSearch">清空搜索</el-button>
+        </el-col>
+      </el-row>
+    </div>
     <el-table
+      class="list-section"
       v-loading="listLoading"
       :data="users"
       element-loading-text="Loading"
@@ -65,7 +100,12 @@ export default {
       size: 10,
       total: 0,
       userRoles: USER_ROLE,
-      userStatus: USER_STATUS
+      userStatus: USER_STATUS,
+      filter: {
+        status: '',
+        telephone: '',
+        role: ''
+      }
     }
   },
   async created() {
@@ -74,7 +114,7 @@ export default {
   methods: {
     async fetchUsers() {
       this.listLoading = true
-      const response = await list(this.page, this.size)
+      const response = await list(this.page, this.size, this.filter)
       this.users = response.data.map(u => Object.assign(u, { formattedGmtCreated: parseTime(u.gmtCreated) }))
       this.total = response.total
       this.listLoading = false
@@ -89,7 +129,25 @@ export default {
     },
     onClickView(user) {
       this.$router.push(`/users/${user.id}`)
+    },
+    async onClickSearch() {
+      this.page = 1
+      await this.fetchUsers()
+    },
+    async onClickClearSearch() {
+      this.filter = {}
+      this.page = 1
+      await this.fetchUsers()
     }
   }
 }
 </script>
+<style>
+  .list-section {
+    margin-bottom: 2rem;
+  }
+
+  .select {
+    width: 100%;
+  }
+</style>
