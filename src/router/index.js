@@ -127,6 +127,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/contact-messages',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'ContactMessages',
+        component: () => import('@/views/contact-messages/index'),
+        meta: { title: '反馈消息', icon: 'message' }
+      }
+    ]
+  },
+  {
     path: '4ncov',
     component: Layout,
     children: [

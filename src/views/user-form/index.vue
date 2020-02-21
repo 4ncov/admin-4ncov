@@ -146,7 +146,6 @@
 import { getDetail, verify } from '@/api/user'
 import { USER_STATUS } from '@/utils/status'
 import USER_ROLE, { isHospital, isSupplier } from '@/utils/user-role'
-import { getUserId } from '@/utils/auth'
 import { parseTime } from '@/utils/'
 
 export default {
