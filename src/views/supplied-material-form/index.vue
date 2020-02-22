@@ -197,7 +197,7 @@
 <script>
 import { list } from '@/api/material-category'
 import { listProvinces, listCities, listDistricts } from '@/api/master-data'
-import { approve, reject, create } from '@/api/supplied-materials'
+import { approve, reject, create, update } from '@/api/supplied-materials'
 import STATUS from '@/utils/status'
 
 export default {
@@ -269,12 +269,13 @@ export default {
       this.geo.districts = response.data
     },
     async onSave() {
+      let response
       if (!this.isEdit) {
-        const response = await create(this.form)
-        this.$message({ message: response.message, type: 'info' })
+        response = await create(this.form)
       } else {
-        console.log('update') // TODO update
+        response = await update(this.$route.params.id, this.form)
       }
+      this.$message({ message: response.message, type: 'info' })
       this.$router.back()
     },
     onCancel() {

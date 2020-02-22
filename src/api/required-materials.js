@@ -29,3 +29,11 @@ export function reject(id, reviewMessage) {
     method: 'patch'
   })
 }
+
+export function update(id, material) {
+  return request({
+    url: `/required-materials/${id}`,
+    method: 'put',
+    data: material
+  })
+}
