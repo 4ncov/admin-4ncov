@@ -255,9 +255,13 @@ export default {
       alert('请重新进入编辑.')
       this.$router.back()
     }
-    const response = await list()
-    this.categories = response.data
-    await this.fetchProvinces()
+    const [categoriesResponse] = await Promise.all([
+      list(),
+      this.fetchProvinces(),
+      this.form.address.province && this.fetchCities() || Promise.resolve(),
+      this.form.address.province && this.form.address.city && this.fetchDistricts() || Promise.resolve()
+    ])
+    this.categories = categoriesResponse.data
     this.isLoading = false
   },
   methods: {
