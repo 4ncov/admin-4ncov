@@ -1,6 +1,7 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
+import moment from 'moment'
 
 /**
  * Parse the time to string
@@ -86,6 +87,10 @@ export function formatTime(time, option) {
       '分'
     )
   }
+}
+
+export function formatDateTime(dateTime) {
+  return moment(dateTime).format('YYYY-MM-DD hh:mm:ss')
 }
 
 /**

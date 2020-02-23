@@ -38,7 +38,7 @@
 
 <script>
 import { list } from '@/api/contact-message'
-import { parseTime } from '@/utils/'
+import { formatDateTime } from '@/utils/'
 
 export default {
 
@@ -62,7 +62,7 @@ export default {
       const response = await list(this.pagination.page, this.pagination.size)
       this.pagination.total = response.total
       this.messages = response.data
-        .map(message => Object.assign(message, { formattedGmtCreated: parseTime(message.gmtCreated) }))
+        .map(message => Object.assign(message, { formattedGmtCreated: formatDateTime(message.gmtCreated) }))
     },
     async loadCurrent() {
       this.listLoading = true
